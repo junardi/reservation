@@ -1,0 +1,28 @@
+.navigation-container {
+  
+  background-color: #20232a;
+
+  .navigation-header {
+
+    display: flex;
+    align-items: center;
+    height: 100%;
+    min-height: 4rem;
+
+    h1 {
+      
+      font-size: 1.25rem;
+      margin: 0px;
+
+      a {
+        color: #FFFFFF;
+        text-decoration: none;
+      }
+    }
+
+  }
+
+}
+
+
+

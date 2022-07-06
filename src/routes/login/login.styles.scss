@@ -1,0 +1,31 @@
+.login-container {
+
+  margin-top: 50px;
+
+  .login-wrap {
+
+    width: 450px;
+    margin: 45px auto;
+    background-color: #f7f7f7;
+    padding: 30px;
+
+    h1 {
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+
+      .form-control:focus {
+        border-color: ced4da;
+        box-shadow: none;
+      }
+    }
+  }
+
+  img {
+    border-radius: 2px;
+  }
+
+}
