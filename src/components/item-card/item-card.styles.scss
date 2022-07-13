@@ -1,0 +1,46 @@
+.item-card-container {
+  background-color: #1e1b26;
+
+  .details-container {
+
+    padding: 10px; 
+
+    h3 {
+      font-size: 26px;
+      font-weight: 400;
+      color: #e7e7e7;
+      font-family: "Montserrat", sans-serif;
+    }
+  
+    p.description {
+      font-size: 12px;
+      font-weight: 400;
+      color: #9b9b9b;
+      text-align: justify;
+      line-height: 1.3;
+    }
+
+    .book-reservation-button {
+      border: 1px solid #fe4141;
+      border-radius: 5px;
+      padding: 4px;
+      width: 140px;
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      margin-top: 20px;
+      cursor: pointer;
+
+      h3 {
+        width: 100%;
+        font-size: 14px;
+        color: #fe4141;
+        margin: 0px;
+        text-align: center;
+      }
+
+    }
+
+  }
+
+}

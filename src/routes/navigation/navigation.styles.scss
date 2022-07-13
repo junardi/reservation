@@ -8,6 +8,7 @@
     align-items: center;
     height: 100%;
     min-height: 4rem;
+    color: #FFFFFF;
 
     h1 {
       
@@ -22,7 +23,14 @@
 
   }
 
+  span {
+    margin-left: auto;
+    cursor: pointer;
+  }
+
 }
 
-
+.main-container {
+  margin-top: 20px;
+}
 

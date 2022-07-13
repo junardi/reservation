@@ -1,9 +1,21 @@
+import AddItem from '../../modals/add-item/add-item.modal';
+import { Container, Row } from 'react-bootstrap';
+
 import './items.styles.scss';
+import ItemsContainer from '../../components/items-container/items-container.component';
+
 
 const Items = () => {
+  
   return(
-    <h1>Hello Items</h1>
+    <Container>
+      <Row>
+        <AddItem />
+      </Row>
+      <ItemsContainer></ItemsContainer>
+    </Container>
   )
+
 };
 
 export default Items;
