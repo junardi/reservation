@@ -6,12 +6,17 @@ import { ItemsContext } from '../../contexts/items.context';
 import ItemCard from '../../components/item-card/item-card.component';
 import BookReservation from '../../modals/book-reservation/book-reservation.modal';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const ItemsContainer = () => {
 
   const [modalShow, setModalShow] = useState(false);
   const [selectedModalItem, setSelectedModalItem] = useState(null);
 
   const { itemsMap } = useContext(ItemsContext);
+
+  const notify = (message) => toast(message);
 
   const openReservationModal = (selectedItem) => {
     setSelectedModalItem(selectedItem);
@@ -21,6 +26,7 @@ const ItemsContainer = () => {
   const closeReservationModal = (event) => {
     setSelectedModalItem(null);
     setModalShow(false);
+    notify('Added Reservation.');
   };
 
   return(
@@ -44,6 +50,7 @@ const ItemsContainer = () => {
         <BookReservation show={modalShow} onHide={closeReservationModal} selectedModalItem={selectedModalItem}></BookReservation>                                                    
       }
       
+      <ToastContainer />
 
     </Fragment>
   )

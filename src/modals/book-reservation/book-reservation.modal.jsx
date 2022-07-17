@@ -1,11 +1,8 @@
-
-
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import { Modal, Button, Container, Row, Col, Form } from "react-bootstrap";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './book-reservation.styles.scss';
-
 import { addReservation } from "../../utils/firebase/firebase.utils";
 
 const dateToday = new Date();
@@ -36,16 +33,12 @@ const isValidEmail = (email) => {
 
 //const sampleArray = ["Hi", "Hello"];
 
-
 const BookReservation = ({show, onHide, selectedModalItem}) => {
-
-  
 
   const [selectedBooking, setSelectedBooking] = useState('');
   
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { name, email, phone, address, message } = formFields;
-
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -87,10 +80,13 @@ const BookReservation = ({show, onHide, selectedModalItem}) => {
       message: message
     };
 
-    console.log(data);
+    try {
+      await addReservation(selectedModalItem.id, data);
+      onHide();
 
-    const add = await addReservation(selectedModalItem.id, data);
-    console.log(add);
+    } catch(error) {
+      console.log(error);
+    }
 
   };
 
@@ -101,117 +97,121 @@ const BookReservation = ({show, onHide, selectedModalItem}) => {
 
 
   return (
-    <Modal
-      show={show}
-      onHide={onHide}
-      size="lg"
-      backdrop="static"
-      keyboard={false}
-      className="book-reservation-modal"
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Book Reservation
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
 
-        {
-          selectedModalItem &&
-          <Container className="item-details">
-            <Row>
-              <Col xs="12">
-                <img src={selectedModalItem.file[0].downloadUrl} alt={`${selectedModalItem.file[0].name}`} className="img-fluid" />
-                <h3>{selectedModalItem.name}</h3>
-                <p>{selectedModalItem.description}</p>
-              </Col>
-            </Row>
-          </Container>
-        }
-        
-        <Form>
-          <Container>
-            <div className="form-check">
-              <input className="form-check-input" type="checkbox" checked={isRange} onChange={handleIsRange} value="" id="flexCheckIndeterminate" />
-              <label className="form-check-label">
-                Select Range for multiple day reservation
-              </label>
-            </div>
+    <Fragment>
+      <Modal
+        show={show}
+        onHide={onHide}
+        size="lg"
+        backdrop="static"
+        keyboard={false}
+        className="book-reservation-modal"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Book Reservation
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
 
-            <Calendar 
-              onChange={setCalendarValue} 
-              value={value} 
-              locale="en" 
-              minDate={new Date(year, month, dayOfTheMonth)} 
-              selectRange={isRange} 
-              className="book-react-calendar"
-            />          
-
-            {
-              selectedBooking && 
-              <p className="selected-booking">
-                Selected Date: 
-                <span>
-                  {
-                    Array.isArray(selectedBooking) ? selectedBooking.join(' to ') : selectedBooking
-                  }
-                </span>
-              </p>
-            }
-
-          </Container> 
+          {
+            selectedModalItem &&
+            <Container className="item-details">
+              <Row>
+                <Col xs="12">
+                  <img src={selectedModalItem.file[0].downloadUrl} alt={`${selectedModalItem.file[0].name}`} className="img-fluid" />
+                  <h3>{selectedModalItem.name}</h3>
+                  <p>{selectedModalItem.description}</p>
+                </Col>
+              </Row>
+            </Container>
+          }
           
-          <Container className="mt-5">
-            <Row>
-              
-              <Col xs="6">
-                <Form.Group className="form-group">
-                  <Form.Label>Name</Form.Label>
-                  <Form.Control type="text" name="name" onChange={handleChange}></Form.Control>
-                </Form.Group>
-              </Col>
+          <Form>
+            <Container>
+              <div className="form-check">
+                <input className="form-check-input" type="checkbox" checked={isRange} onChange={handleIsRange} value="" id="flexCheckIndeterminate" />
+                <label className="form-check-label">
+                  Select Range for multiple day reservation
+                </label>
+              </div>
 
-              <Col xs="6">
-                <Form.Group className="form-group">
-                  <Form.Label>Email</Form.Label>
-                  <Form.Control type="email" name="email" onChange={handleChange} placeholder="sample@gmail.com"></Form.Control>
-                </Form.Group>
-              </Col>
+              <Calendar 
+                onChange={setCalendarValue} 
+                value={value} 
+                locale="en" 
+                minDate={new Date(year, month, dayOfTheMonth)} 
+                selectRange={isRange} 
+                className="book-react-calendar"
+              />          
 
-              <Col xs="6">
-                <Form.Group className="form-group">
-                  <Form.Label>Phone</Form.Label>
-                  <Form.Control type="number" name="phone" onChange={handleChange}></Form.Control>
-                </Form.Group>
-              </Col>
+              {
+                selectedBooking && 
+                <p className="selected-booking">
+                  Selected Date: 
+                  <span>
+                    {
+                      Array.isArray(selectedBooking) ? selectedBooking.join(' to ') : selectedBooking
+                    }
+                  </span>
+                </p>
+              }
 
-              <Col xs="6">
-                <Form.Group className="form-group">
-                  <Form.Label>Address</Form.Label>
-                  <Form.Control type="text" name="address" onChange={handleChange}></Form.Control>
-                </Form.Group>
-              </Col>
+            </Container> 
+            
+            <Container className="mt-5">
+              <Row>
+                
+                <Col xs="6">
+                  <Form.Group className="form-group">
+                    <Form.Label>Name</Form.Label>
+                    <Form.Control type="text" name="name" onChange={handleChange}></Form.Control>
+                  </Form.Group>
+                </Col>
 
-              <Col xs="12">
-                <Form.Group className="form-group">
-                  <Form.Label>Message</Form.Label>
-                  <Form.Control as="textarea" rows={5} name="message" onChange={handleChange}></Form.Control>
-                </Form.Group>
-              </Col>
+                <Col xs="6">
+                  <Form.Group className="form-group">
+                    <Form.Label>Email</Form.Label>
+                    <Form.Control type="email" name="email" onChange={handleChange} placeholder="sample@gmail.com"></Form.Control>
+                  </Form.Group>
+                </Col>
 
-            </Row>
+                <Col xs="6">
+                  <Form.Group className="form-group">
+                    <Form.Label>Phone</Form.Label>
+                    <Form.Control type="number" name="phone" onChange={handleChange}></Form.Control>
+                  </Form.Group>
+                </Col>
 
-          </Container>
-        
-        </Form>
+                <Col xs="6">
+                  <Form.Group className="form-group">
+                    <Form.Label>Address</Form.Label>
+                    <Form.Control type="text" name="address" onChange={handleChange}></Form.Control>
+                  </Form.Group>
+                </Col>
 
-      </Modal.Body>
+                <Col xs="12">
+                  <Form.Group className="form-group">
+                    <Form.Label>Message</Form.Label>
+                    <Form.Control as="textarea" rows={5} name="message" onChange={handleChange}></Form.Control>
+                  </Form.Group>
+                </Col>
 
-      <Modal.Footer>
-        <Button disabled={!value || !name || !isValidEmail(email) || !phone || !address || !message} onClick={handleSubmit}>Book Reservation</Button>
-      </Modal.Footer>
+              </Row>
 
-    </Modal>  
+            </Container>
+          
+          </Form>
+
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button disabled={!value || !name || !isValidEmail(email) || !phone || !address || !message} onClick={handleSubmit}>Book Reservation</Button>
+        </Modal.Footer>
+
+      </Modal>  
+     
+    </Fragment>
   )
 
 };
