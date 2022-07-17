@@ -82,7 +82,7 @@ const BookReservation = ({show, onHide, selectedModalItem}) => {
 
     try {
       await addReservation(selectedModalItem.id, data);
-      onHide();
+      onHide(true);
 
     } catch(error) {
       console.log(error);

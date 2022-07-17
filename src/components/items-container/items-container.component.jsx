@@ -23,10 +23,14 @@ const ItemsContainer = () => {
     setModalShow(true);
   };
 
-  const closeReservationModal = (event) => {
+  const closeReservationModal = (isAdded) => {
     setSelectedModalItem(null);
     setModalShow(false);
-    notify('Added Reservation.');
+
+    if(isAdded) {
+      notify('Reservation request sent.');
+    }
+ 
   };
 
   return(
