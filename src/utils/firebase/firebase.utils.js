@@ -12,7 +12,8 @@ import {
   Timestamp,
   addDoc,
   query,
-  getDocs
+  getDocs,
+  doc
 } from 'firebase/firestore';
 
 import { 
@@ -97,5 +98,13 @@ export const getItems = async () => {
   return itemMap;
   
 }
+
+
+export const addReservation = async(id, data) => {
+  data.approved = false;
+  const ref = collection(db, "items", id, "reservations");
+  return await addDoc(ref, data);
+};
+
 
 

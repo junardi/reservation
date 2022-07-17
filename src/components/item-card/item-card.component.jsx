@@ -1,13 +1,24 @@
-
+import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
 import './item-card.styles.scss';
+import { UserContext } from '../../contexts/user.context';
 
+const ItemCard = ({item, openReservationModal, id}) => {
 
-const ItemCard = ({item, openReservationModal}) => {
+  const { currentUser } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const { name, file, description } = item;
 
   const bookReservation = (event) => {
-    openReservationModal(true);
+    
+    item.id = id;
+    
+    openReservationModal(item);
+  };
+
+  const navigateToSelectedItem = () => {
+    navigate(`/items/${id}`);
   };
 
   return(
@@ -17,9 +28,24 @@ const ItemCard = ({item, openReservationModal}) => {
         <h3>{name}</h3>
         <p className='description'>{description}</p>
 
-        <div className="book-reservation-button" onClick={bookReservation}>
-          <h3>Book Reservation</h3>
-        </div>
+        {
+          !currentUser &&
+          <div className="book-reservation-button" onClick={bookReservation}>
+            <h3>Book Reservation</h3>
+          </div>
+        }
+
+        {
+          currentUser &&
+          <div className="book-reservation-button" onClick={navigateToSelectedItem}>
+            <h3>View item Reservations</h3>
+          </div>
+        }
+
+
+
+
+
 
       </div>
     </div>

@@ -1,7 +1,8 @@
-import { useState, Fragment } from "react";
+import { useState, Fragment, useContext } from "react";
 import { Modal, Button, Container, Row, Col, Form } from "react-bootstrap";
 import { uploadFile, getDownloadUrl, addItem } from "../../utils/firebase/firebase.utils";  
 import './add-item.styles.scss';  
+import { ItemsContext } from "../../contexts/items.context";
 
 const defaultFormFields = {
   name: '',
@@ -9,6 +10,8 @@ const defaultFormFields = {
 };
 
 const AddItem = () => {
+
+  const { callReTrigger } = useContext(ItemsContext);
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -53,6 +56,7 @@ const AddItem = () => {
       await addItem(item);
       setShowLoading(false);
       handleClose();
+      callReTrigger();
 
     } catch(error) {
       console.log(error);

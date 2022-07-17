@@ -7,6 +7,9 @@ import { signOutUser } from '../../utils/firebase/firebase.utils';
 
 import './navigation.styles.scss';
 
+const d = new Date();
+let year = d.getFullYear();
+
 const Navigation = () => {
   
   const { currentUser } = useContext(UserContext);
@@ -16,6 +19,14 @@ const Navigation = () => {
     await signOutUser();
     navigate('/login');
   };
+
+  const navigateAdminLogin = () => {
+    navigate('/login');
+  };
+
+  const navigateItems = () => {
+    navigate('/items');
+  }
 
   return (
     <Fragment>
@@ -28,7 +39,11 @@ const Navigation = () => {
                 <Link to='/'>Damires Hills Reservation</Link>
               </h1>
 
-              { currentUser && <span onClick={handleSignOut}>Logout</span> }
+              <div className="left-header">
+                { currentUser && <span onClick={navigateItems}>Items</span> }
+                { currentUser && <span onClick={handleSignOut}>Logout</span> }
+                { !currentUser && <span onClick={navigateAdminLogin}>Admin Login</span> }
+              </div>
             </Col>
           </Row>
         </Container>
@@ -36,6 +51,16 @@ const Navigation = () => {
 
       <div className="main-container">
         <Outlet />
+      </div>
+
+      <div className="footer">
+        <Container className='footer-inner'>
+          <Row>
+            <Col>
+              <p>Copyright &copy; {year} Damires Hills Reservation System. All Rights Reserved.</p>                 
+            </Col>
+          </Row>
+        </Container>
       </div>
 
     </Fragment>

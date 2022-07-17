@@ -13,8 +13,14 @@ const ItemsContainer = () => {
 
   const { itemsMap } = useContext(ItemsContext);
 
-  const openReservationModal = (value) => {
+  const openReservationModal = (selectedItem) => {
+    setSelectedModalItem(selectedItem);
     setModalShow(true);
+  };
+
+  const closeReservationModal = (event) => {
+    setSelectedModalItem(null);
+    setModalShow(false);
   };
 
   return(
@@ -22,20 +28,22 @@ const ItemsContainer = () => {
       
       <Row>
         <Col xs="12">
-
           <div className='items-container'>
             {
               Object.keys(itemsMap).map(id => {
                 const item =itemsMap[id];
-                return <ItemCard key={id} item={item} openReservationModal={openReservationModal}></ItemCard>
+                return <ItemCard key={id} item={item} id={id} openReservationModal={openReservationModal}></ItemCard>
               })
             }
           </div>
-
         </Col>
       </Row>
       
-      <BookReservation show={modalShow} onHide={() => setModalShow(false)} selectedModalItem={selectedModalItem}></BookReservation>                                                    
+      {
+        selectedModalItem && 
+        <BookReservation show={modalShow} onHide={closeReservationModal} selectedModalItem={selectedModalItem}></BookReservation>                                                    
+      }
+      
 
     </Fragment>
   )
