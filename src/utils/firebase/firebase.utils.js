@@ -12,8 +12,7 @@ import {
   Timestamp,
   addDoc,
   query,
-  getDocs,
-  doc
+  getDocs
 } from 'firebase/firestore';
 
 import { 
@@ -83,24 +82,43 @@ export const getItems = async () => {
   const q = query(collectionRef);
 
   const querySnapshot = await getDocs(q);
-  //console.log(querySnapshot.docs);
+  
   const itemMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
-    
-    //console.log(acc);
-    //console.log(docSnapshot.id);
-    //console.log(docSnapshot.data());
-
+  
     acc[docSnapshot.id] = docSnapshot.data();
     return acc;
 
   }, {});
 
+  // Object.keys(itemMap).map(async(id) => {
+  //   itemMap[id].reservations = await getItemReservations(id);
+  // });
+
   return itemMap;
+
+}; 
+
+export const getItemReservations = async(id) => {
+
+  const collectionRef = collection(db, "items", id, "reservations");
+  const q = query(collectionRef);
+
+  const querySnapshot = await getDocs(q);
   
-}
+  const reservationsMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+  
+    acc[docSnapshot.id] = docSnapshot.data();
+    return acc;
+
+  }, {});
+
+  return reservationsMap;
+};
 
 
 export const addReservation = async(id, data) => {
+  data.dateCreated = Timestamp.now();
+  data.dateUpdated = Timestamp.now();
   data.approved = false;
   const ref = collection(db, "items", id, "reservations");
   return await addDoc(ref, data);

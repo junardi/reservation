@@ -1,9 +1,11 @@
-import { useState, Fragment } from "react";
+import { useState, Fragment, useContext } from "react";
 import { Modal, Button, Container, Row, Col, Form } from "react-bootstrap";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './book-reservation.styles.scss';
 import { addReservation } from "../../utils/firebase/firebase.utils";
+import { ItemsContext } from "../../contexts/items.context";
+import { useEffect } from "react";
 
 const dateToday = new Date();
 dateToday.setDate(dateToday.getDate() + 1);
@@ -13,6 +15,8 @@ const dayOfTheMonth = dateToday.getDate();
 
 //const dateToDisable = new Date(2022, 6, 18);
 //const arrayOfDateToDisable = [new Date(2022, 6, 18).toDateString(), new Date(2022, 6, 19).toDateString(), new Date(2022, 6, 20).toDateString()];                                      
+
+
 
 const defaultFormFields = {
   name: '',
@@ -34,6 +38,50 @@ const isValidEmail = (email) => {
 //const sampleArray = ["Hi", "Hello"];
 
 const BookReservation = ({show, onHide, selectedModalItem}) => {
+
+  //console.log(selectedModalItem);
+ 
+
+  const { doGetItemReservations  } = useContext(ItemsContext);
+  const [itemReservationsArray, setItemReservationsArray] = useState([])
+
+  useEffect(() => {
+    
+    const arrayOfDateToDisable = [];
+
+    const getItemReservations = async() => {
+      const itemReservations = await doGetItemReservations(selectedModalItem.id);
+    
+      Object.keys(itemReservations).every((id) => {
+      
+        const reservationValues = itemReservations[id]['reservationValues'];
+        
+        if(Array.isArray(reservationValues)) {
+          reservationValues.every(obj => {
+            arrayOfDateToDisable.push(obj.toDate().toDateString());
+            return true;
+          });
+        } else {
+          arrayOfDateToDisable.push(reservationValues.toDate().toDateString());
+        }
+
+        
+        setItemReservationsArray(arrayOfDateToDisable);
+
+        return true;
+      });
+
+    };
+
+    getItemReservations();
+  
+  }, [doGetItemReservations, selectedModalItem.id]);
+
+
+  // useEffect(() => {
+  //   console.log(itemReservationsArray);
+  // }, [itemReservationsArray]);
+
 
   const [selectedBooking, setSelectedBooking] = useState('');
   
@@ -90,10 +138,13 @@ const BookReservation = ({show, onHide, selectedModalItem}) => {
 
   };
 
-  // const tileDisabled = ({activeStartDate, date, view}) => {
-  //   const isFound = arrayOfDateToDisable.find(x => x === date.toDateString());
-  //   return date.toDateString() === isFound;
-  // };
+  const tileDisabled = ({activeStartDate, date, view}) => {
+    //console.log(itemReservationsArray);
+    if(itemReservationsArray) {
+      const isFound = itemReservationsArray.find(x => x === date.toDateString());
+      return date.toDateString() === isFound;
+    }
+  };
 
 
   return (
@@ -136,14 +187,18 @@ const BookReservation = ({show, onHide, selectedModalItem}) => {
                 </label>
               </div>
 
-              <Calendar 
-                onChange={setCalendarValue} 
-                value={value} 
-                locale="en" 
-                minDate={new Date(year, month, dayOfTheMonth)} 
-                selectRange={isRange} 
-                className="book-react-calendar"
-              />          
+              {
+                itemReservationsArray &&
+                <Calendar 
+                  onChange={setCalendarValue} 
+                  value={value} 
+                  locale="en" 
+                  minDate={new Date(year, month, dayOfTheMonth)} 
+                  selectRange={isRange} 
+                  tileDisabled={tileDisabled}
+                  className="book-react-calendar"
+                />          
+              }
 
               {
                 selectedBooking && 
