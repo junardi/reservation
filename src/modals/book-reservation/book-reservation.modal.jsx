@@ -118,9 +118,26 @@ const BookReservation = ({show, onHide, selectedModalItem}) => {
   };
 
   const handleSubmit = async(event) => {
+    event.preventDefault();
+
+    let dateValue = null;
+    
+    if(Array.isArray(value)) {
+      const start = value[0];
+      const end = value[1];
+
+      const dateRange = getDatesInRange(start, end);
+      dateRange.unshift(start);
+      dateValue = dateRange;
+
+    } else {
+      dateValue = value;
+    }
+
+    //console.log(dateValue);
     
     const data = {
-      reservationValues: value,
+      reservationValues: dateValue,
       name: name,
       email: email, 
       phone: phone,
@@ -131,7 +148,6 @@ const BookReservation = ({show, onHide, selectedModalItem}) => {
     try {
       await addReservation(selectedModalItem.id, data);
       onHide(true);
-
     } catch(error) {
       console.log(error);
     }
@@ -144,6 +160,22 @@ const BookReservation = ({show, onHide, selectedModalItem}) => {
       const isFound = itemReservationsArray.find(x => x === date.toDateString());
       return date.toDateString() === isFound;
     }
+  };
+
+  const getDatesInRange = (startDate, endDate) => {
+    
+    const date = new Date(startDate.getTime());
+    
+    date.setDate(date.getDate() + 1);
+
+    const dates = [];
+  
+    while (date < endDate) {
+      dates.push(new Date(date));
+      date.setDate(date.getDate() + 1);
+    }
+
+    return dates;
   };
 
 
