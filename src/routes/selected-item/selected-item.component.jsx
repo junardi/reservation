@@ -11,7 +11,7 @@ const SelectedItem = () => {
 
   const navigate = useNavigate();
   const { id } = useParams();
-  const { doGetItemDataById, doApproveReservation, doDeleteReservation, doDeleteItem, callReTrigger } = useContext(ItemsContext);
+  const { doGetItemDataById, doApproveReservation, doDeleteReservation, doDeleteItem, callReTrigger, doDeleteFile } = useContext(ItemsContext);
 
   const [selectedItem, setSelectedItem] = useState(null);
 
@@ -46,14 +46,19 @@ const SelectedItem = () => {
     }
   };
 
-  const handleDeleteItem = async(event) => {
+  const handleDeleteItem = async(event, filename) => {
+
+    //console.log(filename);
+
     try {
       await doDeleteItem(id);
+      await doDeleteFile(filename);
       callReTrigger();
       navigate('/items', { replace: true });
     } catch(error) {
       console.log(error);
     }
+
   };
 
 
@@ -65,10 +70,10 @@ const SelectedItem = () => {
       <Container className='selected-item-container'>
         <Row>
           <Col xs="4">
-            <img src={file[0].downloadUrl} alt={`${file[0].downloadUrl.name}`} className="img-fluid" />                                   
+            <img src={file[0].downloadUrl} alt={`${file[0].name}`} className="img-fluid" />                                   
           </Col>
           <Col xs="8">
-            <h1 className='selected-item-header'><strong>{name}</strong> <span onClick={handleDeleteItem}><Trash className='trash-icon' /> Delete</span></h1>
+            <h1 className='selected-item-header'><strong>{name}</strong> <span onClick={event => handleDeleteItem(event, file[0].name)}><Trash className='trash-icon' /> Delete</span></h1>
             <p>{description}</p>
           </Col>
         </Row>

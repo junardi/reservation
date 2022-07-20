@@ -1,7 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { getItems } from "../utils/firebase/firebase.utils";
-import { getItemReservations, getItemDataById, approveReservation, deleteReservation, deleteItem } from "../utils/firebase/firebase.utils";
-
+import { getItemReservations, getItemDataById, approveReservation, deleteReservation, deleteItem, deleteFile } from "../utils/firebase/firebase.utils";
 
 export const ItemsContext = createContext({
   itemsMap: {},
@@ -10,7 +9,8 @@ export const ItemsContext = createContext({
   callReTrigger: () => {},
   doApproveReservation: () => {},
   doDeleteReservation: () => {},
-  doDeleteItem: () => {}
+  doDeleteItem: () => {},
+  doDeleteFile: () => {}
 });
 
 export const ItemsContextProvider = ({children}) => {
@@ -60,7 +60,12 @@ export const ItemsContextProvider = ({children}) => {
     return deletingItem;
   };
 
-  const value = { itemsMap, callReTrigger, doGetItemReservations, doGetItemDataById, doApproveReservation, doDeleteReservation, doDeleteItem };                                           
+  const doDeleteFile = async(filename) => {
+    const deletingFile = await deleteFile(filename);
+    return deletingFile;
+  };
+
+  const value = { itemsMap, callReTrigger, doGetItemReservations, doGetItemDataById, doApproveReservation, doDeleteReservation, doDeleteItem, doDeleteFile };                                           
 
   return (
     <ItemsContext.Provider value={value}>{children}</ItemsContext.Provider>

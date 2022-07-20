@@ -112,7 +112,7 @@ const AddItem = () => {
                   </Col>
 
                   <Col xs="12">
-                    <Button variant="secondary" type="submit">Add</Button>
+                    <Button disabled={!name || !description || !selectedFile} type="submit">Add</Button>
                   </Col>
 
                 </Row>
