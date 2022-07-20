@@ -1,12 +1,28 @@
 .selected-item-container {
 
+  h1.selected-item-header {
+    display: flex;
+    align-items: center;
+
+    span {
+      margin-left: auto;
+      color: #dc3545;
+      font-size: 20px;
+      cursor: pointer;
+
+      .trash-icon {
+        font-size: 28px;
+      }
+    }
+  }
+
   .button-actions-container {
     button {
 
       &:first-child {
         margin-right: 10px;
       }
-      
+
     }
   }
 

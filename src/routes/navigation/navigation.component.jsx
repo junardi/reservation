@@ -26,7 +26,11 @@ const Navigation = () => {
 
   const navigateItems = () => {
     navigate('/items');
-  }
+  };
+
+  const navigateHome = () => {
+    navigate('/');
+  };
 
   return (
     <Fragment>
@@ -40,6 +44,7 @@ const Navigation = () => {
               </h1>
 
               <div className="left-header">
+                <span onClick={navigateHome}>Home</span>
                 { currentUser && <span onClick={navigateItems}>Items</span> }
                 { currentUser && <span onClick={handleSignOut}>Logout</span> }
                 { !currentUser && <span onClick={navigateAdminLogin}>Admin Login</span> }

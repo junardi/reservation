@@ -160,5 +160,9 @@ export const deleteReservation = async(itemId, reservationId) => {
   return await deleteDoc(doc(db, 'items', itemId, 'reservations', reservationId));
 }
 
+export const deleteItem = async(itemId) => {
+  return await deleteDoc(doc(db, 'items', itemId));
+};
+
 
 

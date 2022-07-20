@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { getItems } from "../utils/firebase/firebase.utils";
-import { getItemReservations, getItemDataById, approveReservation, deleteReservation } from "../utils/firebase/firebase.utils";
+import { getItemReservations, getItemDataById, approveReservation, deleteReservation, deleteItem } from "../utils/firebase/firebase.utils";
 
 
 export const ItemsContext = createContext({
@@ -9,7 +9,8 @@ export const ItemsContext = createContext({
   doGetItemDataById: () => {},
   callReTrigger: () => {},
   doApproveReservation: () => {},
-  doDeleteReservation: () => {}
+  doDeleteReservation: () => {},
+  doDeleteItem: () => {}
 });
 
 export const ItemsContextProvider = ({children}) => {
@@ -54,7 +55,12 @@ export const ItemsContextProvider = ({children}) => {
     return deleting;
   };
 
-  const value = { itemsMap, callReTrigger, doGetItemReservations, doGetItemDataById, doApproveReservation, doDeleteReservation };                                           
+  const doDeleteItem = async(itemId) => {
+    const deletingItem = await deleteItem(itemId);
+    return deletingItem;
+  };
+
+  const value = { itemsMap, callReTrigger, doGetItemReservations, doGetItemDataById, doApproveReservation, doDeleteReservation, doDeleteItem };                                           
 
   return (
     <ItemsContext.Provider value={value}>{children}</ItemsContext.Provider>

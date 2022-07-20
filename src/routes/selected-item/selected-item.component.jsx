@@ -3,12 +3,15 @@ import { useParams } from 'react-router-dom';
 import './selected-item.styles.scss';
 import { ItemsContext } from '../../contexts/items.context';
 import { Container, Row, Col, Table, Button } from 'react-bootstrap';
+import { Trash } from 'react-bootstrap-icons';
+import { useNavigate } from 'react-router-dom';
 
 
 const SelectedItem = () => {
 
+  const navigate = useNavigate();
   const { id } = useParams();
-  const { doGetItemDataById, doApproveReservation, doDeleteReservation } = useContext(ItemsContext);
+  const { doGetItemDataById, doApproveReservation, doDeleteReservation, doDeleteItem, callReTrigger } = useContext(ItemsContext);
 
   const [selectedItem, setSelectedItem] = useState(null);
 
@@ -43,6 +46,16 @@ const SelectedItem = () => {
     }
   };
 
+  const handleDeleteItem = async(event) => {
+    try {
+      await doDeleteItem(id);
+      callReTrigger();
+      navigate('/items', { replace: true });
+    } catch(error) {
+      console.log(error);
+    }
+  };
+
 
   if(selectedItem) {
 
@@ -55,7 +68,7 @@ const SelectedItem = () => {
             <img src={file[0].downloadUrl} alt={`${file[0].downloadUrl.name}`} className="img-fluid" />                                   
           </Col>
           <Col xs="8">
-            <h1><strong>{name}</strong></h1>
+            <h1 className='selected-item-header'><strong>{name}</strong> <span onClick={handleDeleteItem}><Trash className='trash-icon' /> Delete</span></h1>
             <p>{description}</p>
           </Col>
         </Row>
