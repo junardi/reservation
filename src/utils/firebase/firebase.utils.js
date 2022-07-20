@@ -12,7 +12,11 @@ import {
   Timestamp,
   addDoc,
   query,
-  getDocs
+  getDocs,
+  doc,
+  getDoc,
+  updateDoc,
+  deleteDoc
 } from 'firebase/firestore';
 
 import { 
@@ -123,6 +127,38 @@ export const addReservation = async(id, data) => {
   const ref = collection(db, "items", id, "reservations");
   return await addDoc(ref, data);
 };
+
+
+export const getItemDataById = async(id) => {
+
+  const docRef = doc(db, "items", id);
+  const docSnap = await getDoc(docRef);
+
+  const reservations = [];
+  const reservationsQuerySnapshot = await getDocs(collection(db, "items", id, "reservations"));                                     
+  reservationsQuerySnapshot.forEach((doc) => {
+    // doc.data() is never undefined for query doc snapshots
+    //console.log(doc.id, " => ", doc.data());
+    const data = doc.data();
+    data['reservationId'] = doc.id;
+    reservations.push(data);
+  });
+
+  const itemData = docSnap.data();
+  itemData['reservations'] = reservations;
+
+  return itemData;
+};
+
+
+export const approveReservation = async(itemId, reservationId) => {
+  const ref = doc(db, 'items', itemId, 'reservations', reservationId);
+  return await updateDoc(ref, { approved: true });
+};
+
+export const deleteReservation = async(itemId, reservationId) => {
+  return await deleteDoc(doc(db, 'items', itemId, 'reservations', reservationId));
+}
 
 
 

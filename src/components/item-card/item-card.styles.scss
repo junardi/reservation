@@ -37,6 +37,10 @@
       margin-top: 20px;
       cursor: pointer;
 
+      &.wide {
+        width: 175px;
+      }
+
       h3 {
         width: 100%;
         font-size: 14px;

@@ -37,7 +37,7 @@ const ItemCard = ({item, openReservationModal, id}) => {
 
         {
           currentUser &&
-          <div className="book-reservation-button" onClick={navigateToSelectedItem}>
+          <div className="book-reservation-button wide" onClick={navigateToSelectedItem}>
             <h3>View item Reservations</h3>
           </div>
         }

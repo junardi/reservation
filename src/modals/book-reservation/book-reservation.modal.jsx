@@ -135,7 +135,7 @@ const BookReservation = ({show, onHide, selectedModalItem}) => {
     }
 
     //console.log(dateValue);
-    
+
     const data = {
       reservationValues: dateValue,
       name: name,
