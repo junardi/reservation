@@ -1,7 +1,7 @@
 import { Fragment, useContext } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 
-import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { Outlet, Link, useNavigate, NavLink } from 'react-router-dom';
 import { UserContext } from '../../contexts/user.context';
 import { signOutUser } from '../../utils/firebase/firebase.utils';
 
@@ -44,10 +44,10 @@ const Navigation = () => {
               </h1>
 
               <div className="left-header">
-                <span onClick={navigateHome}>Home</span>
-                { currentUser && <span onClick={navigateItems}>Items</span> }
+                <NavLink to="/">Home</NavLink>
+                { currentUser && <NavLink to="items">Items</NavLink> }
                 { currentUser && <span onClick={handleSignOut}>Logout</span> }
-                { !currentUser && <span onClick={navigateAdminLogin}>Admin Login</span> }
+                { !currentUser && <NavLink to="login">Admin Login</NavLink> }
               </div>
             </Col>
           </Row>

@@ -30,12 +30,27 @@
     span {
       cursor: pointer;
       margin-right: 25px;
-
+      color: #FFFFFF;
 
       &:last-child {
         margin-right: 0px;
       }
     }
+
+    a {
+      text-decoration: none;
+      color: #FFFFFF;
+      margin-right: 25px;
+
+      &.active {
+        color: #28f3ee;
+      }
+
+      &:last-child {
+        margin-right: 0px;
+      }
+    }
+
 
   }
 
