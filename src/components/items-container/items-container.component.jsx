@@ -81,7 +81,7 @@ const ItemsContainer = ({isHome}) => {
         <BookReservation show={modalShow} onHide={closeReservationModal} selectedModalItem={selectedModalItem}></BookReservation>                                                    
       }
       
-      <AddItem show={addItemShow} onHide={closeAddItem} />
+      <AddItem show={addItemShow} onHide={closeAddItem} selectedItem={null} />
       <ToastContainer />
 
     </Fragment>

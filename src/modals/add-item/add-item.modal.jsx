@@ -32,11 +32,19 @@ const AddItem = ({show, onHide, selectedItem, id}) => {
       setFormFields(defaultFormFields);
       setImageDisplay(file[0].downloadUrl);
 
+    } else {
+
+      defaultFormFields.name = '';
+      defaultFormFields.description = '';
+
+      setFormFields(defaultFormFields);
+      setImageDisplay('');
+
     }
 
   }, [selectedItem]);
 
-
+  
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormFields({...formFields, [name]: value});
@@ -65,7 +73,7 @@ const AddItem = ({show, onHide, selectedItem, id}) => {
     if(!selectedItem) {
 
       setShowLoading(true);
-      
+
       try {
     
         const upload = await uploadFile(selectedFile);
