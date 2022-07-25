@@ -4,15 +4,23 @@
     display: flex;
     align-items: center;
 
-    span {
+    span.actions-container {
       margin-left: auto;
-      color: #dc3545;
       font-size: 20px;
       cursor: pointer;
 
-      .trash-icon {
-        font-size: 28px;
+      span.trash-icon-container {
+        color: #dc3545;
+        margin-right: 15px;
+        .trash-icon {
+          font-size: 28px;
+        }
       }
+
+      span.edit-icon-container {
+        color: #020250;
+      }
+     
     }
   }
 

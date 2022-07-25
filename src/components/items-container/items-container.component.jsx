@@ -1,4 +1,4 @@
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
 import { Fragment, useContext, useState } from 'react';
 import './items-container.styles.scss';
 
@@ -8,9 +8,10 @@ import BookReservation from '../../modals/book-reservation/book-reservation.moda
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AddItem from '../../modals/add-item/add-item.modal';
 
 
-const ItemsContainer = () => {
+const ItemsContainer = ({isHome}) => {
 
   const [modalShow, setModalShow] = useState(false);
   const [selectedModalItem, setSelectedModalItem] = useState(null);
@@ -34,9 +35,34 @@ const ItemsContainer = () => {
  
   };
 
+  /* Below for the add item */
+  
+  const [addItemShow, setAddItemShow] = useState(false);
+
+  const closeAddItem = () => {
+    setAddItemShow(false);
+  };
+
+  const openAddItem = (event) => {
+    setAddItemShow(true);
+  };
+
+
   return(
     <Fragment>
       
+      {
+        !isHome &&
+        <Row>
+          <Col className="add-item-modal-header">
+            <h1>List of Items</h1>
+            <Button variant="primary" onClick={openAddItem}>
+              Add
+            </Button>
+          </Col>
+        </Row>
+      }
+
       <Row>
         <Col xs="12">
           <div className='items-container'>
@@ -55,6 +81,7 @@ const ItemsContainer = () => {
         <BookReservation show={modalShow} onHide={closeReservationModal} selectedModalItem={selectedModalItem}></BookReservation>                                                    
       }
       
+      <AddItem show={addItemShow} onHide={closeAddItem} />
       <ToastContainer />
 
     </Fragment>

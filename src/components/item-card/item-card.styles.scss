@@ -2,6 +2,12 @@
   background-color: #1e1b26;
   margin-bottom: 30px;
 
+  img {
+    height: 320px;
+    width: 100%;
+    object-fit: cover;
+  }
+
   .details-container {
 
     padding: 10px; 

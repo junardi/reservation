@@ -3,8 +3,9 @@ import { useParams } from 'react-router-dom';
 import './selected-item.styles.scss';
 import { ItemsContext } from '../../contexts/items.context';
 import { Container, Row, Col, Table, Button } from 'react-bootstrap';
-import { Trash } from 'react-bootstrap-icons';
+import { Trash, PencilSquare } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
+import AddItem from '../../modals/add-item/add-item.modal';
 
 
 const SelectedItem = () => {
@@ -61,76 +62,117 @@ const SelectedItem = () => {
 
   };
 
+  /* below for the add item modal */
+
+  const [addItemShow, setAddItemShow] = useState(false);
+
+  const closeAddItem = () => {
+    setAddItemShow(false);
+  };
+
+  const openAddItem = (event) => {
+    setAddItemShow(true);
+  };
+
+
 
   if(selectedItem) {
 
     const { description, file, name, reservations} = selectedItem;
 
     return(
-      <Container className='selected-item-container'>
-        <Row>
-          <Col xs="4">
-            <img src={file[0].downloadUrl} alt={`${file[0].name}`} className="img-fluid" />                                   
-          </Col>
-          <Col xs="8">
-            <h1 className='selected-item-header'><strong>{name}</strong> <span onClick={event => handleDeleteItem(event, file[0].name)}><Trash className='trash-icon' /> Delete</span></h1>
-            <p>{description}</p>
-          </Col>
-        </Row>
 
-        <Row className='mt-5'>
-          <Col xs="12">
-            <h3><strong>Reservations</strong></h3>
-            <Table striped>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th>Address</th>
-                  <th>Message</th>
-                  <th>Date Requested</th>
-                  <th className='text-center'>Date Approved</th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  reservations.map((el, index) => (
+      <Fragment>
+        <Container className='selected-item-container'>
+          <Row>
+            <Col xs="4">
+              <img src={file[0].downloadUrl} alt={`${file[0].name}`} className="img-fluid" />                                   
+            </Col>
+            <Col xs="8">
+              <h1 
+                className='selected-item-header'
+              >
+                <strong>{name}</strong> 
+                <span className='actions-container'>
+
+                  <span 
+                    className='trash-icon-container'
+                    onClick={event => handleDeleteItem(event, file[0].name)}
+                  >
+                    <Trash className='trash-icon' /> Delete
+                  </span>
                     
-                    <tr key={index}>
-                      <td>{el.name}</td>
-                      <td>{el.email}</td>
-                      <td>{el.phone}</td>
-                      <td>{el.address}</td>
-                      <td>{el.message}</td>
-                      <td>{el.dateCreated.toDate().toDateString()}</td>
-                      <td className='button-actions-container text-center'>
-                        
-                        {
-                          !el.approved &&
-                          <Fragment>
-                            <Button className='btn-danger' onClick={event => handleCancelReservation(event, el.reservationId)}>Cancel</Button>                              
-                            <Button onClick={event => handleApproveRequest(event, el.reservationId)}>Approve</Button>
-                          </Fragment>
-                        }  
+                  <span
+                    className='edit-icon-container'
+                    onClick={openAddItem}
+                  >
+                    <PencilSquare className='edit-icon' /> Edit
+                  </span>
 
-                        {
-                          el.approved &&
-                          el.dateUpdated.toDate().toDateString()
-                        }
+                </span>
+              
+              </h1>
+              <p>{description}</p>
+            </Col>
+          </Row>
+
+          <Row className='mt-5'>
+            <Col xs="12">
+              <h3><strong>Reservations</strong></h3>
+              <Table striped>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Message</th>
+                    <th>Date Requested</th>
+                    <th className='text-center'>Date Approved</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    reservations.map((el, index) => (
                       
-                      </td>
-                    </tr>
-                    
-                  ))      
-                }
-              </tbody>
-            </Table>
-          </Col>
-        </Row>
+                      <tr key={index}>
+                        <td>{el.name}</td>
+                        <td>{el.email}</td>
+                        <td>{el.phone}</td>
+                        <td>{el.address}</td>
+                        <td>{el.message}</td>
+                        <td>{el.dateCreated.toDate().toDateString()}</td>
+                        <td className='button-actions-container text-center'>
+                          
+                          {
+                            !el.approved &&
+                            <Fragment>
+                              <Button className='btn-danger' onClick={event => handleCancelReservation(event, el.reservationId)}>Cancel</Button>                              
+                              <Button onClick={event => handleApproveRequest(event, el.reservationId)}>Approve</Button>
+                            </Fragment>
+                          }  
+
+                          {
+                            el.approved &&
+                            el.dateUpdated.toDate().toDateString()
+                          }
+                        
+                        </td>
+                      </tr>
+                      
+                    ))      
+                  }
+                </tbody>
+              </Table>
+            </Col>
+          </Row>
 
 
-      </Container>
+        </Container>
+
+        <AddItem show={addItemShow} onHide={closeAddItem} selectedItem={selectedItem} id={id} />
+      </Fragment>
+    
     )
 
   }

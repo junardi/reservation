@@ -5,7 +5,7 @@ import ItemsContainer from '../../components/items-container/items-container.com
 const Home = () => {
   return (
     <Container>
-      <ItemsContainer></ItemsContainer>
+      <ItemsContainer isHome={true}></ItemsContainer>
     </Container>
   )
 };

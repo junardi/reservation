@@ -57,9 +57,14 @@ export const onAuthStateChangedListener = (callback) => {
   return onAuthStateChanged(auth, callback);
 };
 
-export const uploadFile = async (file) => {
-  const storageRef = ref(storage, uuidv4());
-  return await uploadBytes(storageRef, file);
+export const uploadFile = async (file, name) => {
+  if(!name) {
+    const storageRef = ref(storage, uuidv4());
+    return await uploadBytes(storageRef, file);
+  } else {
+    const storageRef = ref(storage, name);
+    return await uploadBytes(storageRef, file);
+  }
 };
 
 export const getDownloadUrl = async(filename) => {
@@ -154,6 +159,25 @@ export const getItemDataById = async(id) => {
 export const approveReservation = async(itemId, reservationId) => {
   const ref = doc(db, 'items', itemId, 'reservations', reservationId);
   return await updateDoc(ref, { approved: true });
+};
+
+export const updateReservationItem = async(itemId, data) => {
+  
+  const ref = doc(db, 'items', itemId);
+  return await updateDoc(ref, 
+    { 
+      name: data.name, 
+      description: data.description, 
+      dateUpdated: Timestamp.now(),
+      file: [
+        {
+          name: data.fileName,
+          downloadUrl: data.fileDownloadUrl
+        }
+      ]
+    }
+  );
+
 };
 
 export const deleteReservation = async(itemId, reservationId) => {

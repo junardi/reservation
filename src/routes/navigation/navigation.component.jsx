@@ -20,17 +20,17 @@ const Navigation = () => {
     navigate('/login');
   };
 
-  const navigateAdminLogin = () => {
-    navigate('/login');
-  };
+  // const navigateAdminLogin = () => {
+  //   navigate('/login');
+  // };
 
-  const navigateItems = () => {
-    navigate('/items');
-  };
+  // const navigateItems = () => {
+  //   navigate('/items');
+  // };
 
-  const navigateHome = () => {
-    navigate('/');
-  };
+  // const navigateHome = () => {
+  //   navigate('/');
+  // };
 
   return (
     <Fragment>
