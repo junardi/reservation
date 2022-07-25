@@ -28,7 +28,6 @@ const SelectedItem = () => {
     getSelectedItem(); 
   }, [doGetItemDataById, id, reset]);
 
-
   const handleCancelReservation = async(event, reservationId) => {
     try {
       await doDeleteReservation(id, reservationId);
@@ -78,7 +77,7 @@ const SelectedItem = () => {
 
   if(selectedItem) {
 
-    const { description, file, name, reservations} = selectedItem;
+    const { description, file, name, reservations, price} = selectedItem;
 
     return(
 
@@ -113,6 +112,7 @@ const SelectedItem = () => {
               
               </h1>
               <p>{description}</p>
+              <p>&#8369; <strong>{price}</strong></p>
             </Col>
           </Row>
 

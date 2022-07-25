@@ -6,7 +6,8 @@ import { ItemsContext } from "../../contexts/items.context";
 
 const defaultFormFields = {
   name: '',
-  description: ''
+  description: '',
+  price: ''
 };
 
 const AddItem = ({show, onHide, selectedItem, id}) => {
@@ -18,16 +19,17 @@ const AddItem = ({show, onHide, selectedItem, id}) => {
   const [showLoading, setShowLoading] = useState(false);
 
   const [formFields, setFormFields] = useState(defaultFormFields);
-  const { name, description } = formFields;
+  const { name, description, price } = formFields;
 
   useEffect(() => {
 
     if(selectedItem) {
      
-      const { description, file, name } = selectedItem;
-
-      defaultFormFields.name = name;
-      defaultFormFields.description = description;
+      const { description, file, name, price } = selectedItem;
+  
+      defaultFormFields.name = name ? name: '';
+      defaultFormFields.description = description ? description : '';
+      defaultFormFields.price = price ? price : '';
 
       setFormFields(defaultFormFields);
       setImageDisplay(file[0].downloadUrl);
@@ -36,6 +38,7 @@ const AddItem = ({show, onHide, selectedItem, id}) => {
 
       defaultFormFields.name = '';
       defaultFormFields.description = '';
+      defaultFormFields.price = '';
 
       setFormFields(defaultFormFields);
       setImageDisplay('');
@@ -58,10 +61,7 @@ const AddItem = ({show, onHide, selectedItem, id}) => {
 		reader.readAsDataURL(event.target.files[0]);      
 
     reader.onload = (_event) => { 
-      //const img = new Image(); 
-
 			setImageDisplay(reader.result);
-      //console.log(reader.result);
     };
 
     setSelectedFile(event.target.files[0]);
@@ -81,6 +81,7 @@ const AddItem = ({show, onHide, selectedItem, id}) => {
         const item = {
           name: name,
           description: description,
+          price: Number(price),
           file: [
             {
               name: upload.metadata.name,
@@ -108,6 +109,7 @@ const AddItem = ({show, onHide, selectedItem, id}) => {
           const data = {
             name: name,
             description: description,
+            price: Number(price),
             fileName: upload.metadata.name,
             fileDownloadUrl: downloadUrl
           };
@@ -116,6 +118,7 @@ const AddItem = ({show, onHide, selectedItem, id}) => {
           const data = {
             name: name,
             description: description,
+            price: Number(price),
             fileName: selectedItem.file[0].name,
             fileDownloadUrl: selectedItem.file[0].downloadUrl
           };
@@ -180,6 +183,13 @@ const AddItem = ({show, onHide, selectedItem, id}) => {
 
                   <Col xs="12">
                     <Form.Group className="form-group">
+                      <Form.Label>Price</Form.Label>
+                      <Form.Control type="number" name="price" onChange={handleChange} value={price}></Form.Control>
+                    </Form.Group>
+                  </Col>
+
+                  <Col xs="12">
+                    <Form.Group className="form-group">
                       <Form.Label>Featured Image</Form.Label>
                       <Form.Control ref={selectedFileRef} type="file" name="file" accept="image/*" onChange={handleFileChange}></Form.Control>
                     </Form.Group>
@@ -196,14 +206,14 @@ const AddItem = ({show, onHide, selectedItem, id}) => {
                     
                     {
                       !selectedItem &&
-                      <Button disabled={!name || !description || !selectedFile} type="submit">Add</Button>
+                      <Button disabled={!name || !description || !selectedFile || !price} type="submit">Add</Button>
                     }
 
                     {
                       selectedItem && 
                       <Fragment>
                         <Button type="button" variant="secondary" onClick={handleReset}>Reset</Button>
-                        <Button disabled={!name || !description} type="submit">Update</Button>
+                        <Button disabled={!name || !description || !price} type="submit">Update</Button>
                       </Fragment>
                     }
                     

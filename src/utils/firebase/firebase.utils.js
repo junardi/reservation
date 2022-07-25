@@ -167,7 +167,8 @@ export const updateReservationItem = async(itemId, data) => {
   return await updateDoc(ref, 
     { 
       name: data.name, 
-      description: data.description, 
+      description: data.description,
+      price: data.price,
       dateUpdated: Timestamp.now(),
       file: [
         {

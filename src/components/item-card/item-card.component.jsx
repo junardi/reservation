@@ -8,8 +8,8 @@ const ItemCard = ({item, openReservationModal, id}) => {
   const { currentUser } = useContext(UserContext);
   const navigate = useNavigate();
 
-  const { name, file, description } = item;
-
+  const { name, file, description, price } = item;
+ 
   const bookReservation = (event) => {
     
     item.id = id;
@@ -27,6 +27,11 @@ const ItemCard = ({item, openReservationModal, id}) => {
       <div className="details-container">
         <h3>{name}</h3>
         <p className='description'>{description}</p>
+        {
+          price &&
+          <p className='price'>&#8369; {price}</p>
+        }
+        
 
         {
           !currentUser &&
