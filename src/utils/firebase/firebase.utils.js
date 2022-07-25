@@ -158,7 +158,7 @@ export const getItemDataById = async(id) => {
 
 export const approveReservation = async(itemId, reservationId) => {
   const ref = doc(db, 'items', itemId, 'reservations', reservationId);
-  return await updateDoc(ref, { approved: true });
+  return await updateDoc(ref, { approved: true, dateUpdated: Timestamp.now() });
 };
 
 export const updateReservationItem = async(itemId, data) => {
