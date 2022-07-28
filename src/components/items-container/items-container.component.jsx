@@ -30,7 +30,7 @@ const ItemsContainer = ({isHome}) => {
     setModalShow(false);
 
     if(isAdded) {
-      notify('Reservation request sent.');
+      notify('Reservation request sent. Check your email for details');
     }
  
   };

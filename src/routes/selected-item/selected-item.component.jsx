@@ -6,6 +6,7 @@ import { Container, Row, Col, Table, Button } from 'react-bootstrap';
 import { Trash, PencilSquare } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import AddItem from '../../modals/add-item/add-item.modal';
+import { sendEmail } from '../../utils/email/email.utils';
 
 
 const SelectedItem = () => {
@@ -28,18 +29,38 @@ const SelectedItem = () => {
     getSelectedItem(); 
   }, [doGetItemDataById, id, reset]);
 
-  const handleCancelReservation = async(event, reservationId) => {
+  const handleCancelReservation = async(event, reservation) => {
     try {
-      await doDeleteReservation(id, reservationId);
+      await doDeleteReservation(id, reservation.reservationId);
+
+      const templateParams = {
+        from_name: 'From Reservation', 
+        to_name: reservation.name,
+        to_email: reservation.email,
+        intro_message: "Your reservation for the code below is cancelled and deleted in reservation database.",
+        message: reservation.reservationId
+      };
+
+      await sendEmail(templateParams);
       setReset(!reset);
     } catch(error) {
       console.log(error);
     }
   };
 
-  const handleApproveRequest = async(event, reservationId) => {
+  const handleApproveRequest = async(event, reservation) => {
     try {
-      await doApproveReservation(id, reservationId);
+      await doApproveReservation(id, reservation.reservationId);
+
+      const templateParams = {
+        from_name: 'From Reservation', 
+        to_name: reservation.name,
+        to_email: reservation.email,
+        intro_message: "Your reservation is approved for this code:",
+        message: reservation.reservationId
+      };
+
+      await sendEmail(templateParams);
       setReset(!reset);
     } catch(error) {
       console.log(error);
@@ -77,7 +98,8 @@ const SelectedItem = () => {
 
   if(selectedItem) {
 
-    const { description, file, name, reservations, price} = selectedItem;
+    //console.log(selectedItem);
+    const { description, file, name, reservations, price } = selectedItem;
 
     return(
 
@@ -127,6 +149,7 @@ const SelectedItem = () => {
                     <th>Phone</th>
                     <th>Address</th>
                     <th>Message</th>
+                    <th>Paypal Transaction Id</th>
                     <th>Date Requested</th>
                     <th className='text-center'>Date Approved</th>
                   </tr>
@@ -141,14 +164,15 @@ const SelectedItem = () => {
                         <td>{el.phone}</td>
                         <td>{el.address}</td>
                         <td>{el.message}</td>
+                        <td>{el.transactionId}</td>
                         <td>{el.dateCreated.toDate().toDateString()}</td>
                         <td className='button-actions-container text-center'>
                           
                           {
                             !el.approved &&
                             <Fragment>
-                              <Button className='btn-danger' onClick={event => handleCancelReservation(event, el.reservationId)}>Cancel</Button>                              
-                              <Button onClick={event => handleApproveRequest(event, el.reservationId)}>Approve</Button>
+                              <Button className='btn-danger' onClick={event => handleCancelReservation(event, el)}>Cancel</Button>                              
+                              <Button onClick={event => handleApproveRequest(event, el)}>Approve</Button>
                             </Fragment>
                           }  
 

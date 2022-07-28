@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import './item-card.styles.scss';
 import { UserContext } from '../../contexts/user.context';
+import Price from '../price/price.component';
 
 const ItemCard = ({item, openReservationModal, id}) => {
 
@@ -29,7 +30,7 @@ const ItemCard = ({item, openReservationModal, id}) => {
         <p className='description'>{description}</p>
         {
           price &&
-          <p className='price'>&#8369; {price}</p>
+          <Price price={price} />
         }
         
 

@@ -6,6 +6,10 @@ import './book-reservation.styles.scss';
 import { addReservation } from "../../utils/firebase/firebase.utils";
 import { ItemsContext } from "../../contexts/items.context";
 import { useEffect } from "react";
+import { sendEmail } from "../../utils/email/email.utils";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import Price from "../../components/price/price.component";
+
 
 const dateToday = new Date();
 dateToday.setDate(dateToday.getDate() + 1);
@@ -13,11 +17,7 @@ const year = dateToday.getFullYear();
 const month = dateToday.getMonth();
 const dayOfTheMonth = dateToday.getDate();
 
-//const dateToDisable = new Date(2022, 6, 18);
-//const arrayOfDateToDisable = [new Date(2022, 6, 18).toDateString(), new Date(2022, 6, 19).toDateString(), new Date(2022, 6, 20).toDateString()];                                      
-
-
-
+                        
 const defaultFormFields = {
   name: '',
   email: '',
@@ -35,15 +35,11 @@ const isValidEmail = (email) => {
     );
 };
 
-//const sampleArray = ["Hi", "Hello"];
-
 const BookReservation = ({show, onHide, selectedModalItem}) => {
 
-  //console.log(selectedModalItem);
- 
-
   const { doGetItemReservations  } = useContext(ItemsContext);
-  const [itemReservationsArray, setItemReservationsArray] = useState([])
+  const [itemReservationsArray, setItemReservationsArray] = useState([]);
+  const [isNextStep, setIsNextStep] = useState(false);
 
   useEffect(() => {
     
@@ -65,7 +61,6 @@ const BookReservation = ({show, onHide, selectedModalItem}) => {
           arrayOfDateToDisable.push(reservationValues.toDate().toDateString());
         }
 
-        
         setItemReservationsArray(arrayOfDateToDisable);
 
         return true;
@@ -76,11 +71,6 @@ const BookReservation = ({show, onHide, selectedModalItem}) => {
     getItemReservations();
   
   }, [doGetItemReservations, selectedModalItem.id]);
-
-
-  // useEffect(() => {
-  //   console.log(itemReservationsArray);
-  // }, [itemReservationsArray]);
 
 
   const [selectedBooking, setSelectedBooking] = useState('');
@@ -117,8 +107,28 @@ const BookReservation = ({show, onHide, selectedModalItem}) => {
     
   };
 
-  const handleSubmit = async(event) => {
-    event.preventDefault();
+
+  const handleNext = (event) => {
+    //console.log("handle next");
+    setIsNextStep(true);
+  };
+
+  const handleCancelPayment = (event) => {
+    setIsNextStep(false);
+  }
+
+  const handleSubmit = async(transactionId) => {
+
+    // const templateParams = {
+    //   from_name: 'From Reservation', 
+    //   to_name: 'The Requester',
+    //   to_email: 'nephets.dureza@gmail.com',
+    //   message: 'Hello World'
+    // };
+
+    // const send = await sendEmail(templateParams);
+    // console.log(send);
+
 
     let dateValue = null;
     
@@ -134,7 +144,6 @@ const BookReservation = ({show, onHide, selectedModalItem}) => {
       dateValue = value;
     }
 
-    //console.log(dateValue);
 
     const data = {
       reservationValues: dateValue,
@@ -142,11 +151,24 @@ const BookReservation = ({show, onHide, selectedModalItem}) => {
       email: email, 
       phone: phone,
       address: address,
-      message: message
+      message: message,
+      transactionId: transactionId
     };
 
     try {
-      await addReservation(selectedModalItem.id, data);
+      const doAddReservation = await addReservation(selectedModalItem.id, data);
+      //console.log(doAddReservation);
+
+      const templateParams = {
+        from_name: 'From Reservation', 
+        to_name: name,
+        to_email: email,
+        intro_message: "Here is your reservation code:",
+        message: doAddReservation.id
+      };
+
+      await sendEmail(templateParams);
+      //console.log(send);
       onHide(true);
     } catch(error) {
       console.log(error);
@@ -154,8 +176,10 @@ const BookReservation = ({show, onHide, selectedModalItem}) => {
 
   };
 
+
+
   const tileDisabled = ({activeStartDate, date, view}) => {
-    //console.log(itemReservationsArray);
+   
     if(itemReservationsArray) {
       const isFound = itemReservationsArray.find(x => x === date.toDateString());
       return date.toDateString() === isFound;
@@ -204,7 +228,9 @@ const BookReservation = ({show, onHide, selectedModalItem}) => {
                 <Col xs="12">
                   <img src={selectedModalItem.file[0].downloadUrl} alt={`${selectedModalItem.file[0].name}`} className="img-fluid" />
                   <h3>{selectedModalItem.name}</h3>
+                  <Price price={selectedModalItem.price} />
                   <p>{selectedModalItem.description}</p>
+                 
                 </Col>
               </Row>
             </Container>
@@ -290,11 +316,70 @@ const BookReservation = ({show, onHide, selectedModalItem}) => {
           
           </Form>
 
+          {
+          isNextStep &&
+          <Container>
+            <Row>
+              <Col xs="12">
+                <p>You are required to pay half of the reservation price for a day.</p>
+                <Price price={selectedModalItem.price / 2}/>
+              
+                <PayPalScriptProvider options={{ "client-id": "AdnJz30CsNDDHGab1xjrnkzmy-Di2WyvpReCI4mO3ZmET8pU2ZNM4IFU6sR0RJxwzPqePGX7rcJzTWIV", "currency": "PHP" }}>                              
+                  <PayPalButtons 
+                    createOrder={(data, actions) => {
+                      return actions.order.create({
+                        purchase_units: [
+                          {
+                            description: `${selectedModalItem.description}`,
+                            amount: {
+                              value: `${selectedModalItem.price / 2}`
+                            }
+                          },
+                        ],
+                        application_context: { 
+                          brand_name: 'Reservation',
+                          shipping_preference: 'NO_SHIPPING'
+                        }        
+                      });
+                    }}
+                    onApprove={(data, actions) => {
+                      return actions.order.capture().then((details) => {
+                        
+                        //console.log(details);
+                        //const name = details.payer.name.given_name;
+                        //alert(`Transaction completed by ${name}`);
+
+                        const transactId = details.purchase_units[0].payments.captures[0].id;
+                        //console.log(transactId);
+                        handleSubmit(transactId);
+                        
+                      });
+                    }}
+                  />
+                </PayPalScriptProvider>
+
+              </Col>
+            </Row>
+          </Container>
+          
+          }
+
+
         </Modal.Body>
 
         <Modal.Footer>
-          <Button disabled={!value || !name || !isValidEmail(email) || !phone || !address || !message} onClick={handleSubmit}>Book Reservation</Button>
-        </Modal.Footer>
+
+          {
+            !isNextStep &&
+            <Button disabled={!value || !name || !isValidEmail(email) || !phone || !address || !message} onClick={handleNext}>Next Step</Button>
+          }
+        
+          {
+            isNextStep && 
+            <Button onClick={handleCancelPayment}>Cancel Payment</Button>
+          }
+
+          </Modal.Footer>
 
       </Modal>  
      
