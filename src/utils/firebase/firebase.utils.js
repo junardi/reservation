@@ -16,7 +16,9 @@ import {
   doc,
   getDoc,
   updateDoc,
-  deleteDoc
+  deleteDoc,
+  collectionGroup,
+  where
 } from 'firebase/firestore';
 
 import { 
@@ -131,6 +133,23 @@ export const addReservation = async(id, data) => {
   data.approved = false;
   const ref = collection(db, "items", id, "reservations");
   return await addDoc(ref, data);
+};
+
+export const getReservationByTransactionId = async(transactionId) => {
+  
+  const reservation = query(collectionGroup(db, 'reservations'), where('transactionId', '==', transactionId));
+  const querySnapshot = await getDocs(reservation);
+
+  const reservationArray = [];
+  querySnapshot.forEach((doc) => {
+    const data = {
+      ...doc.data(),
+      transactionId: doc.id
+    };
+    reservationArray.push(data);
+  });
+
+  return reservationArray[0];
 };
 
 

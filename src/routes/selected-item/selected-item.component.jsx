@@ -38,7 +38,7 @@ const SelectedItem = () => {
         to_name: reservation.name,
         to_email: reservation.email,
         intro_message: "Your reservation for the code below is cancelled and deleted in reservation database.",
-        message: reservation.reservationId
+        message: reservation.transactionId
       };
 
       await sendEmail(templateParams);
@@ -57,7 +57,7 @@ const SelectedItem = () => {
         to_name: reservation.name,
         to_email: reservation.email,
         intro_message: "Your reservation is approved for this code:",
-        message: reservation.reservationId
+        message: reservation.transactionId
       };
 
       await sendEmail(templateParams);
@@ -149,7 +149,8 @@ const SelectedItem = () => {
                     <th>Phone</th>
                     <th>Address</th>
                     <th>Message</th>
-                    <th>Paypal Transaction Id</th>
+                    <th>Reservation Date/ Dates</th>
+                    <th>Reservation Code</th>
                     <th>Date Requested</th>
                     <th className='text-center'>Date Approved</th>
                   </tr>
@@ -164,6 +165,18 @@ const SelectedItem = () => {
                         <td>{el.phone}</td>
                         <td>{el.address}</td>
                         <td>{el.message}</td>
+                        <td>
+                        {
+                          Array.isArray(el.reservationValues) ? 
+                          <Fragment>
+                            <span>{el.reservationValues[0].toDate().toDateString()}</span>  
+                            <span> - </span>
+                            <span>{el.reservationValues[el.reservationValues.length - 1].toDate().toDateString()}</span> 
+                          </Fragment>
+                          : 
+                          <span>{el.reservationValues.toDate().toDateString()}</span>
+                        }
+                        </td>
                         <td>{el.transactionId}</td>
                         <td>{el.dateCreated.toDate().toDateString()}</td>
                         <td className='button-actions-container text-center'>

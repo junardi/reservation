@@ -1,0 +1,28 @@
+.reservation-container {
+  table {
+    tr {
+
+      td {
+        text-align: left;
+      }
+
+      td:first-child {
+        font-weight: bold;
+        width: 220px;
+      }
+
+      td.approved {
+        color: #04AA6D;
+        font-weight: bold;
+      }
+
+      td.not-approved {
+        color: brown;
+        font-weight: bold;
+      }
+
+
+
+    }
+  }
+}

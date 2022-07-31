@@ -156,7 +156,7 @@ const BookReservation = ({show, onHide, selectedModalItem}) => {
     };
 
     try {
-      const doAddReservation = await addReservation(selectedModalItem.id, data);
+      await addReservation(selectedModalItem.id, data);
       //console.log(doAddReservation);
 
       const templateParams = {
@@ -164,7 +164,7 @@ const BookReservation = ({show, onHide, selectedModalItem}) => {
         to_name: name,
         to_email: email,
         intro_message: "Here is your reservation code:",
-        message: doAddReservation.id
+        message: transactionId
       };
 
       await sendEmail(templateParams);

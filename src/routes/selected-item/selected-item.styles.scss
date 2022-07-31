@@ -24,11 +24,27 @@
     }
   }
 
+  table {
+
+    th:last-child {
+      width: 170px;
+    }
+
+    th {
+      font-size: 14px;
+    }
+
+    td {
+      font-size: 14px;
+    }
+  
+  }
+
   .button-actions-container {
     button {
-
+      font-size: 14px;
       &:first-child {
-        margin-right: 10px;
+        margin-right: 5px;
       }
 
     }
