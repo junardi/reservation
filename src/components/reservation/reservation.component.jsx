@@ -1,23 +1,15 @@
 import './reservation.styles.scss';
 import { useParams } from 'react-router-dom';
 import { Container, Row, Col, Table } from 'react-bootstrap';
-import { getReservationByTransactionId } from '../../utils/firebase/firebase.utils';
-import { useState, useEffect, Fragment } from 'react';
 
+import { Fragment, useContext } from 'react';
+import { ReservationContext } from '../../contexts/reservation.context';
 
 const Reservation = () => {
 
   const { id } = useParams();
-  const [currentReservation, setCurrentReservation] = useState(false);
 
-  useEffect(() => {
-    const getSelectedReservation = async() => {
-      const reservation = await getReservationByTransactionId(id);
-      setCurrentReservation(reservation);
-    };
-    getSelectedReservation();
-  }, [id]);
-
+  const { currentReservation } = useContext(ReservationContext);
 
   return (
     <Container className='reservation-container'>

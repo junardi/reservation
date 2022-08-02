@@ -18,7 +18,8 @@ import {
   updateDoc,
   deleteDoc,
   collectionGroup,
-  where
+  where,
+  onSnapshot
 } from 'firebase/firestore';
 
 import { 
@@ -135,22 +136,38 @@ export const addReservation = async(id, data) => {
   return await addDoc(ref, data);
 };
 
-export const getReservationByTransactionId = async(transactionId) => {
-  
-  const reservation = query(collectionGroup(db, 'reservations'), where('transactionId', '==', transactionId));
-  const querySnapshot = await getDocs(reservation);
+// export const getReservationByTransactionId = async(transactionId) => {
+//   const reservation = query(collectionGroup(db, 'reservations'), where('transactionId', '==', transactionId));
+//   const querySnapshot = await getDocs(reservation);
+//   const reservationArray = [];
+//   querySnapshot.forEach((doc) => {
+//     const data = {
+//       ...doc.data(),
+//       reservationId: doc.id
+//     };
+//     reservationArray.push(data);
+//   });
+//   return reservationArray[0];
+// };
 
-  const reservationArray = [];
-  querySnapshot.forEach((doc) => {
+export const getReservationByTransactionIdRealtime = (transactionId, callback) => {
+  
+  const q = query(collectionGroup(db, 'reservations'), where('transactionId', '==', transactionId));  
+  const unsubscribe = onSnapshot(q, (snapshot) => {
+    
     const data = {
-      ...doc.data(),
-      transactionId: doc.id
+      ...snapshot.docChanges()[0].doc.data(),
+      reservationId: snapshot.docChanges()[0].doc.id
+      
     };
-    reservationArray.push(data);
+    callback(data);
+
   });
 
-  return reservationArray[0];
+  return unsubscribe;
+
 };
+
 
 
 export const getItemDataById = async(id) => {
