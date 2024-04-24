@@ -7,6 +7,7 @@ const Home = () => {
   return (
     <Container>
       <SearchCode />
+      <h1 className='text-center my-5'>Rooms, Cottages or etc. for Reservations</h1>
       <ItemsContainer isHome={true}></ItemsContainer>
     </Container>
   )

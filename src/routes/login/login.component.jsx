@@ -3,6 +3,7 @@ import { signInAuthUserWithEmailAndPassword } from '../../utils/firebase/firebas
 import './login.styles.scss';
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import energetic from '../../assets/energetic.jpeg';
 
 
 const defaultFormFields = {
@@ -75,7 +76,7 @@ const Login = () => {
           </Col>
 
           <Col>
-            <img src="https://images.summitmedia-digital.com/spotph/images/2020/10/29/damires5-1603972972.jpg" alt={`Damires Hills`} />
+            <img src={energetic} className='img-fluid' alt={`Damires Hills`} />
           </Col>
 
         </Row>

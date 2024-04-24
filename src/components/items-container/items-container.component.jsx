@@ -55,7 +55,7 @@ const ItemsContainer = ({isHome}) => {
         !isHome &&
         <Row>
           <Col className="add-item-modal-header">
-            <h1>List of Items</h1>
+            <h1>List of Items, Rooms or Cottages, etc.</h1>
             <Button variant="primary" onClick={openAddItem}>
               Add
             </Button>

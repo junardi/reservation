@@ -40,7 +40,7 @@ const Navigation = () => {
           <Row>
             <Col className='navigation-header'>
               <h1>
-                <Link to='/'>Damires Hills Reservation</Link>
+                <Link to='/'>Energetic Farm Reservation</Link>
               </h1>
 
               <div className="left-header">
@@ -62,7 +62,7 @@ const Navigation = () => {
         <Container className='footer-inner'>
           <Row>
             <Col>
-              <p>Copyright &copy; {year} Damires Hills Reservation System. All Rights Reserved.</p>                 
+              <p>Copyright &copy; {year} Energetic Farm Reservation System. All Rights Reserved.</p>                 
             </Col>
           </Row>
         </Container>
