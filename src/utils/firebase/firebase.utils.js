@@ -225,5 +225,34 @@ export const deleteItem = async(itemId) => {
   return await deleteDoc(doc(db, 'items', itemId));
 };
 
+export const getAllReservations = async () => {
+  try {
+    // Step 1: Get all items
+    const itemsSnapshot = await getDocs(collection(db, "items"));
+    const reservations = [];
 
+    // Step 2: Loop through each item and fetch its reservations
+    for (const itemDoc of itemsSnapshot.docs) {
+      const itemId = itemDoc.id; // Item ID
+      const itemName = itemDoc.data().name;
+      const reservationsRef = collection(db, `items/${itemId}/reservations`);
+      const reservationsSnapshot = await getDocs(query(reservationsRef));
+
+      // Step 3: Add each reservation to the combined array
+      reservationsSnapshot.forEach(reservationDoc => {
+        reservations.push({
+          id: reservationDoc.id,
+          ...reservationDoc.data(),
+          itemName, // include item name also
+          itemId, // Include item ID for context
+        });
+      });
+    }
+
+    //console.log("All Reservations:", reservations);
+    return reservations;
+  } catch (error) {
+    console.error("Error fetching combined reservations:", error);
+  }
+};
 

@@ -45,7 +45,9 @@ const Navigation = () => {
 
               <div className="left-header">
                 <NavLink to="/">Home</NavLink>
-                { currentUser && <NavLink to="items">Items</NavLink> }
+                <NavLink to="/gallery">Gallery Images</NavLink>
+                { currentUser && <NavLink to="items">Services</NavLink> }
+                { currentUser && <NavLink to="report">Reports</NavLink> }
                 { currentUser && <span onClick={handleSignOut}>Logout</span> }
                 { !currentUser && <NavLink to="login">Admin Login</NavLink> }
               </div>
